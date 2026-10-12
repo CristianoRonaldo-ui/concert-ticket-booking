@@ -1,24 +1,45 @@
+import java.util.Scanner;
+
 public class TicketBooking {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         Concert concert = new Concert("Summer Jazz Night", 5);
+        boolean running = true;
 
-        System.out.println("Concert: " + concert.getName());
-        System.out.println("Available Seats: " + concert.getAvailableSeats());
+        System.out.println("Welcome to " + concert.getName() + " ticket booking!");
 
-        concert.bookTickets(3);
-        System.out.println("Booked 3 tickets. Available seats: " + concert.getAvailableSeats());
+        while (running) {
+            System.out.println();
+            System.out.println("Available seats: " + concert.getAvailableSeats());
+            System.out.println("1. Book tickets");
+            System.out.println("2. Run tests");
+            System.out.println("0. Exit");
+            System.out.print("Choose an option: ");
+            String choice = scanner.nextLine().trim();
 
-        try {
-            concert.bookTickets(10);
-            System.out.println("This line will never be printed because the previous line will throw an exception");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Booking failed: " + e.getMessage());
+            if (choice.equals("1")) {
+                System.out.print("How many tickets? ");
+                String input = scanner.nextLine().trim();
+                try {
+                    int quantity = Integer.parseInt(input);
+                    concert.bookTickets(quantity);
+                    System.out.println("Booked " + quantity + " ticket(s) successfully!");
+                } catch (NumberFormatException e) {
+                    System.out.println("Please enter a whole number.");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Booking failed: " + e.getMessage());
+                }
+            } else if (choice.equals("2")) {
+                runTests();
+            } else if (choice.equals("0")) {
+                running = false;
+                System.out.println("Goodbye!");
+            } else {
+                System.out.println("Invalid option. Please choose 1, 2 or 0.");
+            }
         }
 
-        System.out.println("Program continues. Available seats: " + concert.getAvailableSeats());
-
-        runTests();
-
+        scanner.close();
     }
 
     public static void runTests() {
