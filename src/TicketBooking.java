@@ -13,6 +13,7 @@ public class TicketBooking {
             System.out.println("Available seats: " + concert.getAvailableSeats());
             System.out.println("1. Book tickets");
             System.out.println("2. Run tests");
+            System.out.println("3. Cancel tickets");
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
             String choice = scanner.nextLine().trim();
@@ -31,11 +32,23 @@ public class TicketBooking {
                 }
             } else if (choice.equals("2")) {
                 runTests();
+            } else if (choice.equals("3")) {
+                System.out.print("How many tickets to cancel? ");
+                String input = scanner.nextLine().trim();
+                try {
+                    int quantity = Integer.parseInt(input);
+                    concert.cancelTickets(quantity);
+                    System.out.println("Cancelled " + quantity + " ticket(s) successfully!");
+                } catch (NumberFormatException e) {
+                    System.out.println("Please enter a whole number.");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Cancellation failed: " + e.getMessage());
+                }
             } else if (choice.equals("0")) {
                 running = false;
                 System.out.println("Goodbye!");
             } else {
-                System.out.println("Invalid option. Please choose 1, 2 or 0.");
+                System.out.println("Invalid option. Please choose 1, 2, 3 or 0");
             }
         }
 
@@ -93,6 +106,31 @@ public class TicketBooking {
             System.out.println("Test 4 PASS: negative total seats throws exception");
         } else {
             System.out.println("Test 4 FAIL: expected an exception but none was thrown");
+        }
+
+        // Test 5: cancelling tickets should free up seats
+        Concert concert5 = new Concert("Test Concert", 10);
+        concert5.bookTickets(4);
+        concert5.cancelTickets(3);
+        if (concert5.getAvailableSeats() == 9) {
+            System.out.println("Test 5 PASS: cancelling tickets frees up seats");
+        } else {
+            System.out.println("Test 5 FAIL: expected 9, got " + concert5.getAvailableSeats());
+        }
+
+        // Test 6: cancelling more tickets than booked should throw an exception
+        Concert concert6 = new Concert("Test Concert", 10);
+        concert6.bookTickets(2);
+        boolean thrownForOverCancel = false;
+        try {
+            concert6.cancelTickets(5);
+        } catch (IllegalArgumentException e) {
+            thrownForOverCancel = true;
+        }
+        if (thrownForOverCancel) {
+            System.out.println("Test 6 PASS: cancelling more than booked throws exception");
+        } else {
+            System.out.println("Test 6 FAIL: expected an exception but none was thrown");
         }
     }
 }

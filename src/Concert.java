@@ -33,4 +33,15 @@ public class Concert {
         }
         bookedSeats += quantity;
     }
+
+    public void cancelTickets(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero");
+        }
+        if (quantity > bookedSeats) {
+            throw new IllegalArgumentException(
+                    "Cannot cancel " + quantity + " tickets. Only " + bookedSeats + " tickets are booked");
+        }
+        bookedSeats -= quantity;
+    }
 }
