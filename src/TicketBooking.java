@@ -81,5 +81,18 @@ public class TicketBooking {
         } else {
             System.out.println("Test 3 FAIL: expected an exception but none was thrown");
         }
+
+        // Test 4: creating a concert with negative seats should throw an exception
+        boolean thrownForNegativeSeats = false;
+        try {
+            new Concert("Test Concert", -5);
+        } catch (IllegalArgumentException e) {
+            thrownForNegativeSeats = true;
+        }
+        if (thrownForNegativeSeats) {
+            System.out.println("Test 4 PASS: negative total seats throws exception");
+        } else {
+            System.out.println("Test 4 FAIL: expected an exception but none was thrown");
+        }
     }
 }
