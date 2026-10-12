@@ -4,11 +4,12 @@ A small interactive Java CLI that books concert tickets and uses **exceptions** 
 
 ## Features
 
-- Interactive menu: book tickets, run tests, or exit
-- `bookTickets()` throws `IllegalArgumentException` for invalid requests
-- `try-catch` keeps the program running after a failed booking
+- Interactive menu: book tickets, cancel tickets, run tests, or exit
+- `bookTickets()` / `cancelTickets()` throw `IllegalArgumentException` for invalid requests
+- Constructor validation: a `Concert` with an empty name or negative seats can never be created
+- `try-catch` keeps the program running after a failed booking or cancellation
 - Handles non-numeric input with `NumberFormatException`
-- Built-in manual tests (PASS/FAIL), runnable from the menu
+- 6 built-in manual tests (PASS/FAIL), runnable from the menu
 
 ## Project Structure
 
@@ -38,6 +39,7 @@ Welcome to Summer Jazz Night ticket booking!
 Available seats: 5
 1. Book tickets
 2. Run tests
+3. Cancel tickets
 0. Exit
 Choose an option: 1
 How many tickets? 4
@@ -55,6 +57,9 @@ Choose an option: 2
 Test 1 PASS: valid booking reduces seats
 Test 2 PASS: overbooking throws exception
 Test 3 PASS: booking zero tickets throws exception
+Test 4 PASS: negative total seats throws exception
+Test 5 PASS: cancelling tickets frees up seats
+Test 6 PASS: cancelling more than booked throws exception
 ```
 
 ## Complexity
@@ -63,6 +68,7 @@ Test 3 PASS: booking zero tickets throws exception
 |---|---|---|
 | `getAvailableSeats()` | O(1) | O(1) |
 | `bookTickets(quantity)` | O(1) | O(1) |
+| `cancelTickets(quantity)` | O(1) | O(1) |
 
 Available seats are **computed** (`totalSeats - bookedSeats`) instead of stored, so the two values can never get out of sync
 
@@ -74,3 +80,5 @@ Available seats are **computed** (`totalSeats - bookedSeats`) instead of stored,
 - **`nextLine()` + `Integer.parseInt()` instead of `nextInt()`:** avoids the leftover-newline bug that makes the menu skip input.
 - **Testing exceptions:** use a boolean flag that is set to `true` inside `catch`; the test passes only if the exception was actually thrown
 - **Compare Strings with `.equals()`**, not `==`
+- **Fail fast in the constructor:** throwing inside a constructor means an invalid object is never created. `name == null` is checked first because `||` short-circuits, so `.trim()` is never called on `null`.
+- **Invariants:** `bookTickets()` and `cancelTickets()` together guarantee `0 ≤ bookedSeats ≤ totalSeats` no matter what the user types
